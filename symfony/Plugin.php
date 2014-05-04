@@ -28,6 +28,7 @@ class Plugin extends BasePlugin
                         ->scalarNode('web')->defaultValue('web')->end()
                         ->booleanNode('assetic')->defaultValue(true)->end()
                         ->booleanNode('assets')->defaultValue(true)->end()
+                        ->booleanNode('assets_symlink')->defaultValue(true)->end()
                         ->booleanNode('flush_cache')->defaultValue(true)->end()
                     ->end()
                     ->addDefaultsIfNotSet()
