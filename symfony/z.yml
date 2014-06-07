@@ -22,10 +22,13 @@ tasks:
 
     build:
         post:
+            - @_symfony_build
+
+    _symfony_build:
+        do:
             - @_symfony.build.composer_install
             - ?(symfony.assets)  @_symfony.build.assets_install
             - ?(symfony.assetic) @_symfony.build.assetic_dump
-
     deploy:
         post:
             - ?(symfony.flush_cache) @_symfony.env.flush_cache
@@ -38,9 +41,9 @@ tasks:
         args:
             target_env: ?
             level: ? ""
-            _cmd: verbose ? "cat" : sprintf("tail %s", follow ? "-f" : "")
+            _cmd: VERBOSE ? "cat" : sprintf("tail %s", follow ? "-f" : "")
         flags:
             follow: false
         do: |
             ssh $(envs[target_env].ssh) \
-                "$(verbose ? "cat" : "tail") $(envs[target_env].root)app/logs/$(target_env).log"
+                "$(VERBOSE ? "cat" : "tail") $(envs[target_env].root)app/logs/$(target_env).log"
