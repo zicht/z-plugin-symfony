@@ -12,7 +12,7 @@ tasks:
         cd $(build.dir) && composer install --no-scripts --prefer-dist;
 
     _symfony.build.assets_install: |
-        cd $(build.dir) && php $(symfony.console) assets:install $(symfony.web) --env=$(target_env) --no-debug $(symfony.assets_symlink ? "--symlink");
+        cd $(build.dir) && php $(symfony.console) assets:install $(symfony.web) --env=$(target_env) --no-debug  --relative;
 
     _symfony.build.assetic_dump: |
         cd $(build.dir) && php $(symfony.console) assetic:dump --env=$(target_env) --no-debug;
@@ -27,11 +27,11 @@ tasks:
     _symfony_build:
         do:
             - @_symfony.build.composer_install
-            - ?(symfony.assets)  @_symfony.build.assets_install
-            - ?(symfony.assetic) @_symfony.build.assetic_dump
+            - @(if symfony.assets)  @_symfony.build.assets_install
+            - @(if symfony.assetic) @_symfony.build.assetic_dump
     deploy:
         post:
-            - ?(symfony.flush_cache) @_symfony.env.flush_cache
+            - @(if symfony.flush_cache) @_symfony.env.flush_cache
 
     symfony.logs:
         help: |
