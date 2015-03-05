@@ -9,7 +9,7 @@ tasks:
         fi;
 
     _symfony.build.composer_install: |
-        cd $(build.dir) && composer install --no-scripts --prefer-dist --optimize-autoloader;
+        cd $(build.dir) && composer install --no-scripts --prefer-dist --optimize-autoloader
 
     _symfony.build.assets_install: |
         cd $(build.dir) && php $(symfony.console) assets:install $(symfony.web) --env=$(target_env) --no-debug  --relative;
@@ -18,7 +18,8 @@ tasks:
         cd $(build.dir) && php $(symfony.console) assetic:dump --env=$(target_env) --no-debug;
 
     _symfony.env.flush_cache: |
-        ssh $(envs[target_env].ssh) "cd $(envs[target_env].root) && php $(symfony.console) cache:clear --env=$(target_env) --no-debug"
+        @(sh ssh(target_env))
+        php $(envs[target_env].root)$(symfony.console) cache:clear --env=$(target_env) --no-debug
 
     build:
         post:
@@ -41,9 +42,8 @@ tasks:
         args:
             target_env: ?
             level: ? ""
-            _cmd: VERBOSE ? "cat" : sprintf("tail %s", follow ? "-f" : "")
         flags:
             follow: false
         do: |
-            ssh $(envs[target_env].ssh) \
-                "$(VERBOSE ? "cat" : "tail") $(envs[target_env].root)app/logs/$(target_env).log"
+            @(sh ssh(target_env))
+            tail $(follow ? "--follow") $(path(envs[target_env].root, symfony.root, "app/logs", target_env)).log
