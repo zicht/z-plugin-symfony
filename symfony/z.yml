@@ -3,23 +3,18 @@
 symfony: ~
 
 tasks:
-    _symfony.build.copy_local_vendor: |
-        if [ -d "$(cwd)/vendor/" ];
-            then rsync -rp $(cwd)/vendor/ $(build.dir)/vendor;
-        fi;
-
     _symfony.build.composer_install: |
         cd $(build.dir) && composer install --no-scripts --prefer-dist --optimize-autoloader
 
     _symfony.build.assets_install: |
-        cd $(build.dir) && php $(symfony.console) assets:install $(symfony.web) --env=$(target_env) --no-debug  --relative;
+        cd $(build.dir) && php $(path(symfony.root, symfony.console)) assets:install $(symfony.web) --env=$(target_env) --no-debug --symlink --relative;
 
     _symfony.build.assetic_dump: |
-        cd $(build.dir) && php $(symfony.console) assetic:dump --env=$(target_env) --no-debug;
+        cd $(build.dir) && php $(path(symfony.root, symfony.console)) assetic:dump --env=$(target_env) --no-debug;
 
     _symfony.env.flush_cache: |
         @(sh ssh(target_env))
-        php $(envs[target_env].root)$(symfony.console) cache:clear --env=$(target_env) --no-debug
+        php $(path(envs[target_env].root, symfony.root, symfony.console)) cache:clear --env=$(target_env) --no-debug
 
     build:
         post:
