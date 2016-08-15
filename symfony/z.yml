@@ -12,9 +12,13 @@ tasks:
     _symfony.build.assetic_dump: |
         cd $(build.dir) && php $(path(symfony.root, symfony.console)) assetic:dump --env=$(target_env) --no-debug;
 
-    _symfony.env.flush_cache: |
-        @(sh ssh(target_env))
-        php $(path(envs[target_env].root, symfony.root, symfony.console)) cache:clear --env=$(target_env) --no-debug
+    _symfony.env.flush_cache:
+        args:
+            install_path: ?envs[target_env].root
+        do:
+            - |
+                @(sh ssh(target_env))
+                php $(path(install_path, symfony.root, symfony.console)) cache:clear --env=$(target_env) --no-debug
 
     build:
         post:
