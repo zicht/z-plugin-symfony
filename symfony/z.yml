@@ -14,7 +14,6 @@ tasks:
 
     _symfony.env.flush_cache: |
         @(sh ssh(target_env)) rm -rf $(envs[target_env].root)cache/$(target_env)
-#        php $(path(envs[target_env].root, symfony.root, symfony.console)) cache:clear --env=$(target_env) --no-debug
 
     build:
         post:
