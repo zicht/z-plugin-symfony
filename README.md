@@ -3,4 +3,4 @@
 Provides some tasks and hooks related to Symfony.
 
 # Maintainer(s)
-* Gerard van Helden <gerard@zicht.nl>
+* Philip Bergman <philip@zicht.nl>
