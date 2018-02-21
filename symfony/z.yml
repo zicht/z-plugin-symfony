@@ -12,8 +12,11 @@ tasks:
     _symfony.build.assetic_dump: |
         cd $(build.dir) && php $(path(symfony.root, symfony.console)) assetic:dump --env=$(target_env) --no-debug;
 
-    _symfony.env.flush_cache: |
+    _symfony.env.flush_cache_force: |
         @(sh ssh(target_env)) rm -rf $(envs[target_env].root)app/cache/* && php $(path(envs[target_env].root, symfony.root, symfony.console)) cache:warmup --env=$(target_env) --no-debug
+
+    _symfony.env.flush_cache: |
+        @(sh ssh(target_env)) php $(path(envs[target_env].root, symfony.root, symfony.console)) cache:clear --env=$(target_env) --no-debug
 
     build:
         post:
@@ -25,8 +28,11 @@ tasks:
             - @(if symfony.assets)  @_symfony.build.assets_install
             - @(if symfony.assetic) @_symfony.build.assetic_dump
     deploy:
+        flags:
+            rm-cache: false
         post:
-            - @(if symfony.flush_cache) @_symfony.env.flush_cache
+            -  @(if !rm_cache) @(if symfony.flush_cache) @_symfony.env.flush_cache
+            -  @(if rm_cache) @(if symfony.flush_cache) @_symfony.env.flush_cache_force
 
     symfony.logs:
         help: |
