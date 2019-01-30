@@ -7,16 +7,16 @@ tasks:
         cd $(build.dir) && composer install --no-scripts --prefer-dist --optimize-autoloader --no-dev --no-suggest --no-progress
 
     _symfony.build.assets_install: |
-        cd $(build.dir) && php $(path(symfony.root, symfony.console)) assets:install $(symfony.web) --env=$(target_env) --no-debug --symlink --relative;
+        cd $(build.dir) && $(defaults("php_bin", target_env, "php")) $(path(symfony.root, symfony.console)) assets:install $(symfony.web) --env=$(target_env) --no-debug --symlink --relative;
 
     _symfony.build.assetic_dump: |
-        cd $(build.dir) && php $(path(symfony.root, symfony.console)) assetic:dump --env=$(target_env) --no-debug;
+        cd $(build.dir) && $(defaults("php_bin", target_env, "php")) $(path(symfony.root, symfony.console)) assetic:dump --env=$(target_env) --no-debug;
 
     _symfony.env.flush_cache_force: |
-        @(sh ssh(target_env)) rm -rf $(envs[target_env].root)app/cache/* && php $(path(envs[target_env].root, symfony.root, symfony.console)) cache:warmup --env=$(target_env) --no-debug
+        @(sh ssh(target_env)) rm -rf $(envs[target_env].root)app/cache/* && $(defaults("php_bin", target_env, "php")) $(path(envs[target_env].root, symfony.root, symfony.console)) cache:warmup --env=$(target_env) --no-debug
 
     _symfony.env.flush_cache: |
-        @(sh ssh(target_env)) php $(path(envs[target_env].root, symfony.root, symfony.console)) cache:clear --env=$(target_env) --no-debug
+        @(sh ssh(target_env)) $(defaults("php_bin", target_env, "php")) $(path(envs[target_env].root, symfony.root, symfony.console)) cache:clear --env=$(target_env) --no-debug
 
     build:
         post:
