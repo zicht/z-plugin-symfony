@@ -13,7 +13,7 @@ tasks:
         cd $(build.dir) && $(defaults("php_bin", "local", "php")) $(path(symfony.root, symfony.console)) assetic:dump --env=$(target_env) --no-debug;
 
     _symfony.env.flush_cache_force: |
-        @(sh ssh(target_env)) rm -rf $(envs[target_env].root)app/cache/* && $(defaults("php_bin", target_env, "php")) $(path(envs[target_env].root, symfony.root, symfony.console)) cache:warmup --env=$(target_env) --no-debug
+        @(sh ssh(target_env)) rm -rf $(path(envs[target_env].root, symfony.root, symfony.cache, "*")) && $(defaults("php_bin", target_env, "php")) $(path(envs[target_env].root, symfony.root, symfony.console)) cache:warmup --env=$(target_env) --no-debug
 
     _symfony.env.flush_cache: |
         @(sh ssh(target_env)) $(defaults("php_bin", target_env, "php")) $(path(envs[target_env].root, symfony.root, symfony.console)) cache:clear --env=$(target_env) --no-debug
@@ -46,4 +46,4 @@ tasks:
             follow: false
         do: |
             @(sh ssh(target_env))
-            tail $(follow ? "--follow") $(path(envs[target_env].root, symfony.root, "app/logs", target_env)).log
+            tail $(follow ? "--follow") $(path(envs[target_env].root, symfony.root, symfony.logs, target_env)).log

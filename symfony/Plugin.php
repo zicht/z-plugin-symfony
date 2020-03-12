@@ -1,14 +1,12 @@
 <?php
 /**
- * @author Gerard van Helden <gerard@zicht.nl>
- * @copyright Zicht Online <http://zicht.nl>
+ * @copyright Zicht Online <https://zicht.nl>
  */
 
 namespace Zicht\Tool\Plugin\Symfony;
 
-use \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
-
-use \Zicht\Tool\Plugin as BasePlugin;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Zicht\Tool\Plugin as BasePlugin;
 
 /**
  * Provides the configuration for the symfony tasks
@@ -16,7 +14,7 @@ use \Zicht\Tool\Plugin as BasePlugin;
 class Plugin extends BasePlugin
 {
     /**
-     * @{inheritDoc}
+     * {@inheritDoc}
      */
     public function appendConfiguration(ArrayNodeDefinition $rootNode)
     {
@@ -25,6 +23,8 @@ class Plugin extends BasePlugin
                 ->arrayNode('symfony')
                     ->children()
                         ->scalarNode('console')->defaultValue('app/console')->end()
+                        ->scalarNode('cache')->defaultValue('app/cache/')->end()
+                        ->scalarNode('logs')->defaultValue('app/logs/')->end()
                         ->scalarNode('web')->defaultValue('web')->end()
                         ->scalarNode('root')->defaultValue('')->end()
                         ->booleanNode('assetic')->defaultValue(true)->end()
