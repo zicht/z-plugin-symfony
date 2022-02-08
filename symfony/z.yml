@@ -20,19 +20,19 @@ tasks:
 
     build:
         post:
-            - @_symfony_build
+            - '@_symfony_build'
 
     _symfony_build:
         do:
-            - @_symfony.build.composer_install
-            - @(if symfony.assets)  @_symfony.build.assets_install
-            - @(if symfony.assetic) @_symfony.build.assetic_dump
+            - '@_symfony.build.composer_install'
+            - '@(if symfony.assets)  @_symfony.build.assets_install'
+            - '@(if symfony.assetic) @_symfony.build.assetic_dump'
     deploy:
         flags:
             rm-cache: false
         post:
-            -  @(if !rm_cache) @(if symfony.flush_cache) @_symfony.env.flush_cache
-            -  @(if rm_cache) @(if symfony.flush_cache) @_symfony.env.flush_cache_force
+            - '@(if !rm_cache) @(if symfony.flush_cache) @_symfony.env.flush_cache'
+            - '@(if rm_cache) @(if symfony.flush_cache) @_symfony.env.flush_cache_force'
 
     symfony.logs:
         help: |
